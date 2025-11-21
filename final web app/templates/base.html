@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSTROCOPY IMAGE ANALYSIS - {% block title %}{% endblock %}</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- MUI CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/@mui/material@5.14.2/umd/material-ui.min.css" rel="stylesheet">
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            light: '#63b3ed',
+                            DEFAULT: '#4299e1',
+                            dark: '#3182ce',
+                        },
+                        secondary: {
+                            light: '#a0aec0',
+                            DEFAULT: '#718096',
+                            dark: '#4a5568',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Additional custom styles */
+        .transition-all {
+            transition-property: all;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 150ms;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Navbar with MUI components -->
+    <nav class="bg-blue-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="{{ url_for('home') }}" class="flex items-center space-x-2">
+                <i class="material-icons text-2xl">local_hospital</i>
+                <span class="text-xl font-bold">OSTROCOPY IMAGE ANALYSIS </span>
+            </a>
+            <div class="flex items-center space-x-4">
+                {% if 'user_id' in session %}
+                    <span class="hidden md:inline">Welcome, {{ session['username'] }}</span>
+                    <a href="{{ url_for('dashboard') }}" class="hover:text-blue-200 transition-all flex items-center">
+                        <i class="material-icons mr-1">dashboard</i> Dashboard
+                    </a>
+                    <a href="{{ url_for('predict_route') }}" class="hover:text-blue-200 transition-all flex items-center">
+                        <i class="material-icons mr-1">cloud_upload</i> Predict
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="hover:text-blue-200 transition-all flex items-center">
+                        <i class="material-icons mr-1">logout</i> Logout
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="hover:text-blue-200 transition-all flex items-center">
+                        <i class="material-icons mr-1">login</i> Login
+                    </a>
+                    <a href="{{ url_for('register') }}" class="hover:text-blue-200 transition-all flex items-center">
+                        <i class="material-icons mr-1">person_add</i> Register
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages with MUI styling -->
+    <div class="container mx-auto px-4 mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="p-4 mb-4 rounded-lg shadow-md 
+                                {% if category == 'success' %}bg-green-100 text-green-800
+                                {% elif category == 'danger' %}bg-red-100 text-red-800
+                                {% else %}bg-blue-100 text-blue-800{% endif %}">
+                        <div class="flex items-center">
+                            <i class="material-icons mr-2">
+                                {% if category == 'success' %}check_circle
+                                {% elif category == 'danger' %}error
+                                {% else %}info{% endif %}
+                            </i>
+                            {{ message }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-6">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-blue-600 text-white py-6 mt-8">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex justify-center space-x-4 mb-4">
+                <a href="#" class="hover:text-blue-200 transition-all">
+                    <i class="material-icons">facebook</i>
+                </a>
+                <a href="#" class="hover:text-blue-200 transition-all">
+                    <i class="bi bi-twitter"></i>
+                </a>
+                <a href="#" class="hover:text-blue-200 transition-all">
+                    <i class="bi bi-linkedin"></i>
+                </a>
+            </div>
+            <p>&copy; OTOSCOPY CLASSIFICATION</p>
+            <p class="text-sm mt-2 text-blue-200">Powered by Flask, Tailwind CSS, and Material UI</p>
+        </div>
+    </footer>
+
+    <!-- MUI JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@mui/material@5.14.2/umd/material-ui.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        // You can add MUI component initialization here
+        document.addEventListener('DOMContentLoaded', function() {
+            // Example: Initialize MUI tooltips
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new mdb.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+</body>
+</html>

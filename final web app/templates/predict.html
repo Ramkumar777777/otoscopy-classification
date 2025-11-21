@@ -1,0 +1,80 @@
+<!-- templates/predict.html -->
+{% extends "base.html" %}
+{% block title %}Ear Infection Analysis{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+  <h1 class="text-3xl font-bold text-blue-600 mb-2">
+    <i class="bi bi-upload mr-2"></i> Upload Ear Image
+  </h1>
+  <p class="text-gray-600">Upload an ear scan for analysis</p>
+</div>
+
+{% if not prediction %}
+  <div class="bg-white rounded-xl shadow-md overflow-hidden p-6">
+    <form method="POST" enctype="multipart/form-data" class="space-y-6">
+      <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+        <div class="flex flex-col items-center justify-center">
+          <i class="bi bi-cloud-arrow-up text-4xl text-blue-600 mb-4"></i>
+          <p class="text-gray-600 mb-2">Drag and drop your ear infection images</p>
+          <label for="file" class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition inline-block">
+            <i class="bi bi-folder2-open mr-2"></i> Select File
+            <input type="file" id="file" name="file" class="hidden" accept="image/*" required>
+          </label>
+          <p class="text-xs text-gray-500 mt-2">Supported formats: JPG, PNG</p>
+        </div>
+      </div>
+
+      <button type="submit"
+              class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-medium text-lg transition">
+        <i class="bi bi-magic mr-2"></i> Analyze Scan
+      </button>
+    </form>
+  </div>
+{% else %}
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Prediction Result -->
+    <div class="bg-white rounded-xl shadow-md p-6">
+      <h2 class="text-xl font-bold text-blue-600 mb-4">
+        <i class="bi bi-clipboard2-check mr-2"></i> Analysis Result
+      </h2>
+      <div class="text-center py-6">
+        <div class="inline-block p-4 rounded-full
+                    {% if prediction.lower() == 'normal' %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+          <i class="bi
+             {% if prediction.lower() == 'normal' %}bi-check-circle-fill{% else %}bi-exclamation-triangle-fill{% endif %}
+             text-5xl"></i>
+        </div>
+        <h3 class="text-2xl font-bold mt-4 mb-2">{{ prediction.replace('_',' ').title() }}</h3>
+        <p class="text-gray-600">Detected condition: {{ prediction.replace('_',' ').title() }}</p>
+      </div>
+
+      {% if suggestion %}
+      <div class="mt-6 bg-gray-50 p-4 rounded-lg border-l-4 border-blue-600">
+        <h4 class="font-semibold mb-2">AI Suggestion:</h4>
+        <p class="text-gray-700">{{ suggestion }}</p>
+      </div>
+      {% endif %}
+
+      <div class="mt-6">
+        <a href="{{ url_for('predict_route') }}"
+           class="block text-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition">
+          <i class="bi bi-arrow-repeat mr-2"></i> Analyze Another Scan
+        </a>
+      </div>
+    </div>
+
+    <!-- Uploaded Scan -->
+    <div class="bg-white rounded-xl shadow-md p-6">
+      <h2 class="text-xl font-bold text-blue-600 mb-4">
+        <i class="bi bi-image mr-2"></i> Uploaded Scan
+      </h2>
+      <div class="flex justify-center">
+        <img src="{{ url_for('static', filename='uploads/' + image_file) }}"
+             alt="Uploaded Ear Scan"
+             class="rounded-lg shadow-md max-h-96">
+      </div>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}

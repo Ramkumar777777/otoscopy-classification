@@ -1,0 +1,43 @@
+<!-- templates/home.html -->
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+  <!-- Full-page background video -->
+  <video
+    class="fixed top-0 left-0 w-full h-full object-cover z-[-1]"
+    src="{{ url_for('static', filename='video/test.mp4') }}"
+    autoplay
+    muted
+    loop
+    playsinline
+  ></video>
+
+  <!-- Optional dark overlay for readability -->
+  <div class="fixed inset-0 bg-black bg-opacity-50 z-[-1]"></div>
+
+  <!-- Page content -->
+  <div class="relative z-10 min-h-screen flex flex-col justify-center items-center text-white px-4">
+    <h1 class="text-5xl md:text-6xl font-bold mb-4 text-center">Ear Scan AI Analyzer</h1>
+    <p class="text-lg md:text-xl mb-8 text-center max-w-2xl">
+      Upload your ear infection images for fast, AI-powered analysis and next-step suggestions.
+    </p>
+    <div class="flex flex-wrap justify-center gap-4">
+      {% if 'user_id' not in session %}
+        <a href="{{ url_for('register') }}"
+           class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition">
+          Get Started <i class="bi bi-arrow-right ml-1"></i>
+        </a>
+        <a href="{{ url_for('login') }}"
+           class="border border-white text-white hover:bg-white hover:text-black px-6 py-3 rounded-lg font-medium transition">
+          Login
+        </a>
+      {% else %}
+        <a href="{{ url_for('predict_route') }}"
+           class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition">
+          Upload Scan <i class="bi bi-upload ml-1"></i>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
